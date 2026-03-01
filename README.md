@@ -4,6 +4,7 @@
 This project is developed for SENG 4660 Agile Game Development. **Skyblade: Flap & Fight** is a 2D game where the player controls a flying character with a core gameplay loop focused on survival and combat. 
 
 The Project Proposal document containing the game concept can be viewed here: [Project Proposal](https://docs.google.com/document/d/1RaUm9SKqCFLQlJPG8B6xBdN2P6oCvjCG7F2bayTgCtI/edit?usp=sharing)
+
 The project backlog and Kanban board for the project can be viewed here: [Backlog & Kanban Board](https://github.com/users/shayleebroadfoot/projects/3)
 
 **Core Mechanics:**
