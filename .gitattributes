@@ -1,3 +1,16 @@
+# Auto handle text files
+* text=auto
+
+# Unity text files
+*.cs text
+*.meta text
+*.unity text
+*.asset text
+*.shader text
+*.mat text
+*.prefab text
+
+# LFS binary assets
 *.png filter=lfs diff=lfs merge=lfs -text
 *.jpg filter=lfs diff=lfs merge=lfs -text
 *.psd filter=lfs diff=lfs merge=lfs -text
