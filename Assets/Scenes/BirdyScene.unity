@@ -827,8 +827,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   enemyPrefab: {fileID: 4183849331348217186, guid: 66424c5f717d64a2fb730cb3581a3d18, type: 3}
   spawnInterval: 3
-  minY: 0.5
-  maxY: 2
+  minY: -0.2
+  maxY: 0.8
 --- !u!1 &1687767467
 GameObject:
   m_ObjectHideFlags: 0
