@@ -642,7 +642,7 @@ GameObject:
   - component: {fileID: 1529330433}
   m_Layer: 0
   m_Name: Ground
-  m_TagString: Untagged
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -825,7 +825,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f6a04806437e4d9cbbb02e40568a2f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  enemyPrefab: {fileID: 4183849331348217186, guid: 66424c5f717d64a2fb730cb3581a3d18, type: 3}
+  enemyPrefab: {fileID: 4839231315209424966, guid: 8faf9be9e554f463d9c9d399f0861be6, type: 3}
   spawnInterval: 3
   minY: -0.2
   maxY: 0.8
@@ -1253,6 +1253,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FlyBehaviour
   velocityBird: 1.5
   rotationSpeed: 10
+  health: 3
+  invincibilityTime: 1
 --- !u!1 &1884794994
 GameObject:
   m_ObjectHideFlags: 0
@@ -1265,7 +1267,7 @@ GameObject:
   - component: {fileID: 1884794995}
   m_Layer: 0
   m_Name: PipeSpawner
-  m_TagString: Untagged
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

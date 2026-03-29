@@ -8,6 +8,12 @@ public class FlyBehaviour : MonoBehaviour
     [SerializeField] private float velocityBird = 2f;
     [SerializeField] private float rotationSpeed = 10f;
 
+    // Health system variables
+    [SerializeField] private int health = 3;
+    [SerializeField] private float invincibilityTime = 1f;
+
+    private bool isInvincible = false;
+
 
     private Rigidbody2D rb;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -36,12 +42,43 @@ public class FlyBehaviour : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        // whenever our player collides, call game over
-        GameManager.instance.GameOver();
+        Debug.Log("Collided with: " + collision.gameObject.name + " | Tag: " + collision.gameObject.tag);
+        // instant death: pipes or ground
+        if (collision.gameObject.CompareTag("Obstacle"))
+        {
+            GameManager.instance.GameOver();
+            return;
+        }
 
+        // enemy damage
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            if (!isInvincible)
+            {
+                TakeDamage(1);
+            }
+        }
+    }
 
+    void TakeDamage(int damage)
+    {
+        health -= damage;
 
-        // future work -------------- hit by enemy or enemy attacks
+        if (health <= 0)
+        {
+            GameManager.instance.GameOver();
+            return;
+        }
 
+        StartCoroutine(InvincibilityCoroutine());
+    }
+
+    IEnumerator InvincibilityCoroutine()
+    {
+        isInvincible = true;
+
+        yield return new WaitForSeconds(invincibilityTime);
+
+        isInvincible = false;
     }
 }

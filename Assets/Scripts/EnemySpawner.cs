@@ -43,6 +43,7 @@ public class EnemySpawner : MonoBehaviour
         Vector3 spawnPos = new Vector3(transform.position.x, spawnY, 0);
 
         Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
+        Debug.Log("Enemy spawned at: " + spawnPos);
     }
 
     // void SpawnEnemy()
