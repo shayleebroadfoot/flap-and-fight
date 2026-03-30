@@ -40,24 +40,41 @@ public class FlyBehaviour : MonoBehaviour
         transform.rotation = Quaternion.Euler(0, 0, rb.linearVelocityY * rotationSpeed);
     }
 
+    // void OnCollisionEnter2D(Collision2D collision)
+    // {
+    //     Debug.Log("Collided with: " + collision.gameObject.name + " | Tag: " + collision.gameObject.tag);
+    //     // instant death: pipes or ground
+    //     if (collision.gameObject.CompareTag("Enemy"))
+    //     {
+    //         GameManager.instance.GameOver();
+    //         return;
+    //     }
+
+    //     // enemy damage
+    //     if (collision.gameObject.CompareTag("Enemy"))
+    //     {
+    //         if (!isInvincible)
+    //         {
+    //             TakeDamage(1);
+    //         }
+    //     }
+    // }
     void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log("Collided with: " + collision.gameObject.name + " | Tag: " + collision.gameObject.tag);
-        // instant death: pipes or ground
-        if (collision.gameObject.CompareTag("Obstacle"))
-        {
-            GameManager.instance.GameOver();
-            return;
-        }
+        Debug.Log("Collided with: " + collision.gameObject.name);
 
-        // enemy damage
+        // enemy -> damage
         if (collision.gameObject.CompareTag("Enemy"))
         {
             if (!isInvincible)
             {
                 TakeDamage(1);
             }
+            return;
         }
+
+        // everything else -> instant death (pipes, ground, etc.)
+        GameManager.instance.GameOver();
     }
 
     void TakeDamage(int damage)
