@@ -9,9 +9,8 @@ public class FlyBehaviour : MonoBehaviour
     [SerializeField] private float rotationSpeed = 10f;
 
     // Health system variables
-    [SerializeField] private int health = 3;
-    [SerializeField] private float invincibilityTime = 1f;
-
+    private int health = 3;
+    private float invincibilityTime = 3f;
     private bool isInvincible = false;
 
 
@@ -21,6 +20,7 @@ public class FlyBehaviour : MonoBehaviour
     {
         //  grab the rigid body in start
         rb = GetComponent<Rigidbody2D>();
+        Debug.Log("Health:  " + health);
     }
 
     // Update is called once per frame
@@ -31,7 +31,6 @@ public class FlyBehaviour : MonoBehaviour
         {
             rb.linearVelocity = Vector2.up * velocityBird;
         }
-
     }
 
     private void FixedUpdate()
@@ -40,46 +39,44 @@ public class FlyBehaviour : MonoBehaviour
         transform.rotation = Quaternion.Euler(0, 0, rb.linearVelocityY * rotationSpeed);
     }
 
-    // void OnCollisionEnter2D(Collision2D collision)
-    // {
-    //     Debug.Log("Collided with: " + collision.gameObject.name + " | Tag: " + collision.gameObject.tag);
-    //     // instant death: pipes or ground
-    //     if (collision.gameObject.CompareTag("Enemy"))
-    //     {
-    //         GameManager.instance.GameOver();
-    //         return;
-    //     }
-
-    //     // enemy damage
-    //     if (collision.gameObject.CompareTag("Enemy"))
-    //     {
-    //         if (!isInvincible)
-    //         {
-    //             TakeDamage(1);
-    //         }
-    //     }
-    // }
     void OnCollisionEnter2D(Collision2D collision)
     {
         Debug.Log("Collided with: " + collision.gameObject.name);
 
-        // enemy -> damage
-        if (collision.gameObject.CompareTag("Enemy"))
-        {
-            if (!isInvincible)
-            {
-                TakeDamage(1);
-            }
-            return;
-        }
-
-        // everything else -> instant death (pipes, ground, etc.)
+        // pipes, ground, anything solid -> instant death
         GameManager.instance.GameOver();
     }
 
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        Debug.Log("Triggered with: " + collision.gameObject.name + " Tag: " + collision.gameObject.tag);
+
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            Debug.Log("Enemy detected");
+
+            if (!isInvincible)
+            {
+                Debug.Log("Taking damage");
+                TakeDamage(1);
+
+                // // disable further damage from this enemy -- restore if issues later
+                // Collider2D enemyCollider = collision.GetComponent<Collider2D>();
+                // if (enemyCollider != null)
+                // {
+                //     enemyCollider.enabled = false;
+                // }
+            }
+            else
+            {
+                Debug.Log("Ignored due to invincibility");
+            }
+        }
+    }
     void TakeDamage(int damage)
     {
         health -= damage;
+        Debug.Log("Health now: " + health);
 
         if (health <= 0)
         {
