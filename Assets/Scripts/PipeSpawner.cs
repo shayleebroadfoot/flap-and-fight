@@ -33,18 +33,45 @@ public class PipeSpawner : MonoBehaviour
 
     private void SpawnPipe()
     {
-        // spawn pipes randomly: position of the spawner +/- random distance (height)
-        // Vector3 spawnPos = transform.position + new Vector3(0, Random.Range(-heightRange, heightRange));
-        
-        // Updated pipe spawning logic
         float randomY = Random.Range(minY, maxY);
         Vector3 spawnPos = new Vector3(transform.position.x, randomY, 0);
-        
-        // spawn at the location
+
         GameObject pipeN = Instantiate(pipe, spawnPos, Quaternion.identity);
 
-        // destroy itself after 10 seconds
+        Transform upper = pipeN.transform.Find("UpperPipe");
+        Transform lower = pipeN.transform.Find("LowerPipe");
+
+        Debug.Log("Pipe root spawned at: " + pipeN.transform.position);
+
+        if (upper != null)
+        {
+            Debug.Log("UpperPipe world pos: " + upper.position);
+        }
+
+        if (lower != null)
+        {
+            Debug.Log("LowerPipe world pos: " + lower.position);
+        }
+
         Destroy(pipeN, 10f);
         lastPipeY = randomY;
     }
+
+    // Original SpawnPipe function without debug logs -- written by Ruth
+    // private void SpawnPipe()
+    // {
+    //     // spawn pipes randomly: position of the spawner +/- random distance (height)
+    //     // Vector3 spawnPos = transform.position + new Vector3(0, Random.Range(-heightRange, heightRange));
+        
+    //     // Updated pipe spawning logic
+    //     float randomY = Random.Range(minY, maxY);
+    //     Vector3 spawnPos = new Vector3(transform.position.x, randomY, 0);
+        
+    //     // spawn at the location
+    //     GameObject pipeN = Instantiate(pipe, spawnPos, Quaternion.identity);
+
+    //     // destroy itself after 10 seconds
+    //     Destroy(pipeN, 10f);
+    //     lastPipeY = randomY;
+    // }
 }

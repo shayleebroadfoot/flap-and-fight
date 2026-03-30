@@ -9,7 +9,7 @@ public class FlyBehaviour : MonoBehaviour
     [SerializeField] private float rotationSpeed = 10f;
 
     // Health system variables
-    private int health = 3;
+    [SerializeField] private int health = 3;
     private float invincibilityTime = 3f;
     private bool isInvincible = false;
 
@@ -43,8 +43,10 @@ public class FlyBehaviour : MonoBehaviour
     {
         Debug.Log("Collided with: " + collision.gameObject.name + " Tag: " + collision.gameObject.tag);
 
-        // pipes, ground, anything solid -> instant death
-        GameManager.instance.GameOver();
+        if (collision.gameObject.CompareTag("Obstacle"))
+        {
+            GameManager.instance.GameOver();
+        }
     }
 
     void OnTriggerEnter2D(Collider2D collision)
@@ -59,13 +61,6 @@ public class FlyBehaviour : MonoBehaviour
             {
                 Debug.Log("Taking damage");
                 TakeDamage(1);
-
-                // // disable further damage from this enemy -- restore if issues later
-                // Collider2D enemyCollider = collision.GetComponent<Collider2D>();
-                // if (enemyCollider != null)
-                // {
-                //     enemyCollider.enabled = false;
-                // }
             }
             else
             {
