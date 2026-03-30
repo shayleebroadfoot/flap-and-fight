@@ -41,7 +41,7 @@ public class FlyBehaviour : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log("Collided with: " + collision.gameObject.name);
+        Debug.Log("Collided with: " + collision.gameObject.name + " Tag: " + collision.gameObject.tag);
 
         // pipes, ground, anything solid -> instant death
         GameManager.instance.GameOver();

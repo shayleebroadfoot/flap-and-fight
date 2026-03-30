@@ -5,8 +5,10 @@ public class EnemySpawner : MonoBehaviour
     public GameObject enemyPrefab;
 
     [SerializeField] float spawnInterval = 3f;
-    [SerializeField] float minY = -0.2f;
-    [SerializeField] float maxY = 0.8f;
+    float minY = -0.2f;
+    float maxY = 0.8f;
+    private float pipeCheckDistance = 1.7f; // horizontal overlap range
+    private float gapOffset = 0.5f; // how tight inside gap
     private float timer;
 
     // Update is called once per frame
@@ -16,42 +18,61 @@ public class EnemySpawner : MonoBehaviour
 
         if (timer >= spawnInterval)
         {
-            if (Random.value > 0.6f)
-            {
-                SpawnEnemy();
-            }
+            // if (Random.value > 0.6f)
+            // {
+            //     SpawnEnemy();
+            // }
+            SpawnEnemy();
             timer = 0f;
         } 
     }
-
     void SpawnEnemy()
     {
-        // pick top or bottom region intentionally
+        float spawnX = transform.position.x;
         float spawnY;
 
-        if (Random.value > 0.5f)
+        GameObject closestPipe = GetClosestPipe(spawnX);
+
+        if (closestPipe != null && Mathf.Abs(closestPipe.transform.position.x - spawnX) < pipeCheckDistance)
         {
-            // spawn near top
-            spawnY = Random.Range(0.4f, maxY);
+            float gapCenterY = closestPipe.transform.position.y;
+            spawnY = gapCenterY + Random.Range(-gapOffset, gapOffset);
         }
         else
         {
-            // spawn near bottom
-            spawnY = Random.Range(minY, 0.1f);
+            if (Random.value > 0.5f)
+            {
+                spawnY = Random.Range(0.4f, maxY);
+            }
+            else
+            {
+                spawnY = Random.Range(minY, 0.1f);
+            }
         }
 
-        Vector3 spawnPos = new Vector3(transform.position.x, spawnY, 0);
+        Vector3 spawnPos = new Vector3(spawnX, spawnY, 0);
 
         Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
         Debug.Log("Enemy spawned at: " + spawnPos);
     }
+    GameObject GetClosestPipe(float xPos)
+    {
+        GameObject[] pipes = GameObject.FindGameObjectsWithTag("Pipe");
 
-    // void SpawnEnemy()
-    // {
-    //     float randomY = Random.Range(minY, maxY);
+        GameObject closest = null;
+        float minDistance = Mathf.Infinity;
 
-    //     Vector3 spawnPos = new Vector3(transform.position.x, randomY, 0);
+        foreach (GameObject pipe in pipes)
+        {
+            float dist = Mathf.Abs(pipe.transform.position.x - xPos);
 
-    //     Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
-    // }
+            if (dist < minDistance)
+            {
+                minDistance = dist;
+                closest = pipe;
+            }
+        }
+
+        return closest;
+    }
 }

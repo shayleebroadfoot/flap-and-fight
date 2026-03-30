@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2874026965213187214}
   m_Layer: 0
   m_Name: PipePrefab
-  m_TagString: Obstacle
+  m_TagString: Pipe
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -60,7 +60,7 @@ GameObject:
   - component: {fileID: 9176802765239607825}
   m_Layer: 0
   m_Name: UpperPipe
-  m_TagString: Untagged
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -198,7 +198,7 @@ GameObject:
   - component: {fileID: 1252400413193981508}
   m_Layer: 0
   m_Name: LowerPipe
-  m_TagString: Untagged
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

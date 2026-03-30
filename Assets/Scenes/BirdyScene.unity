@@ -858,8 +858,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   enemyPrefab: {fileID: 2978289246355277817, guid: f7181a5867ee046c4aae8b394e224de1, type: 3}
   spawnInterval: 3
-  minY: -0.2
-  maxY: 0.8
 --- !u!1 &1687767467
 GameObject:
   m_ObjectHideFlags: 0
@@ -1296,7 +1294,7 @@ GameObject:
   - component: {fileID: 1884794995}
   m_Layer: 0
   m_Name: PipeSpawner
-  m_TagString: Obstacle
+  m_TagString: Pipe
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

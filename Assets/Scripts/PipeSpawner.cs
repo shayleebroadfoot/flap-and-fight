@@ -6,6 +6,7 @@ public class PipeSpawner : MonoBehaviour
     [SerializeField] private float maxTime = 1.5f;
     [SerializeField] private float heightRange = 0.45f;
     [SerializeField] private GameObject pipe;
+    public static float lastPipeY;
     private float minY = -0.2f;   // above ground
     private float maxY = 0.8f;    // below top
 
@@ -44,5 +45,6 @@ public class PipeSpawner : MonoBehaviour
 
         // destroy itself after 10 seconds
         Destroy(pipeN, 10f);
+        lastPipeY = randomY;
     }
 }
