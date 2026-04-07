@@ -73,6 +73,13 @@ public class FlyBehaviour : MonoBehaviour
         health -= damage;
         Debug.Log("Health now: " + health);
 
+        // Remove one heart from the UI
+        HeartManager heartManager = HeartManager.FindFirstObjectByType<HeartManager>(); // this line is sus: find any object of find first object or find by tag???
+        if (heartManager != null)
+        {
+            heartManager.LoseHeart();
+        }
+
         if (health <= 0)
         {
             GameManager.instance.GameOver();

@@ -7,6 +7,8 @@ TagManager:
   - Obstacle
   - Enemy
   - Pipe
+  - Undefined
+  - LowerPipe
   layers:
   - Default
   - TransparentFX
@@ -14,7 +16,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - Pipes
   - 
   - 
   - 

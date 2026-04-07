@@ -6,6 +6,10 @@ public class PipeSpawner : MonoBehaviour
     [SerializeField] private float maxTime = 1.5f;
     [SerializeField] private float heightRange = 0.45f;
     [SerializeField] private GameObject pipe;
+
+    // [SerializeField] private GameObject enemyPrefab;
+
+
     public static float lastPipeY;
     private float minY = -0.2f;   // above ground
     private float maxY = 0.8f;    // below top
@@ -62,11 +66,11 @@ public class PipeSpawner : MonoBehaviour
     // {
     //     // spawn pipes randomly: position of the spawner +/- random distance (height)
     //     // Vector3 spawnPos = transform.position + new Vector3(0, Random.Range(-heightRange, heightRange));
-        
+
     //     // Updated pipe spawning logic
     //     float randomY = Random.Range(minY, maxY);
     //     Vector3 spawnPos = new Vector3(transform.position.x, randomY, 0);
-        
+
     //     // spawn at the location
     //     GameObject pipeN = Instantiate(pipe, spawnPos, Quaternion.identity);
 

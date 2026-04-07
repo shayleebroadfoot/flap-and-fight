@@ -8,12 +8,14 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private float spawnInterval = 3f;
     [SerializeField] private float minY = -0.2f;
     [SerializeField] private float maxY = 0.8f;
-    [SerializeField] private float gapOffset = 0.0f;
+    [SerializeField] private float gapOffset = 0.6f; // changed from 0.0f -> 0.06f 
 
     private float enemyHalfWidth;
     private float pipeHalfWidth;
     private float pipeCheckDistance;
     private float timer;
+
+    // private float safeMargin = 0.2f; // safe margin to spawn enemy
 
     void Start()
     {
@@ -54,107 +56,190 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
+
+    void SpawnEnemy()
+    {
+        int maxAttempts = 5;
+
+        for (int i = 0; i < maxAttempts; i++)
+        {
+            float spawnX = transform.position.x;
+            float spawnY;
+
+            GameObject closestPipe = GetClosestPipe(spawnX);
+
+            if (closestPipe != null && Mathf.Abs(closestPipe.transform.position.x - spawnX) < pipeCheckDistance)
+            {
+                float gapCenterY = closestPipe.transform.position.y;
+
+                float safeMargin = 0.2f;
+
+                // spawnY = gapCenterY + Random.Range(  // birds were spawning in between the pipe opening (NOT GOOD)
+                //     -gapOffset + safeMargin,
+                //      gapOffset - safeMargin
+                // );
+
+                // randomly choose top or bottom
+                if (Random.value > 0.5f)
+                {
+                    // spawn ABOVE the gap
+                    spawnY = Random.Range(gapCenterY + gapOffset + safeMargin, maxY);
+                }
+                else
+                {
+                    // spawn BELOW the gap
+                    spawnY = Random.Range(minY, gapCenterY - gapOffset - safeMargin);
+                }
+            }
+            else
+            {
+                spawnY = Random.Range(minY, maxY);
+            }
+
+            Vector3 spawnPos = new Vector3(spawnX, spawnY, 0f);
+
+            if (IsSpawnPositionClear(spawnPos))
+            {
+                Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
+                Debug.Log("Enemy spawned at: " + spawnPos);
+                return; // SUCCESS → stop trying
+            }
+        }
+
+        // If all attempts fail:
+        Debug.Log("Failed to find valid spawn position");
+    }
+
     // void SpawnEnemy()
     // {
-    //     float spawnX = transform.position.x;
+    //     int maxAttempts = 15; // Increased attempts for better coverage
+    //                           // Added +2.0f offset to spawn X to give horizontal separation from pipes
+    //     float spawnX = transform.position.x + 2.0f;
     //     float spawnY;
 
-    //     GameObject closestPipe = GetClosestPipe(spawnX);
-
-    //     if (closestPipe != null)
+    //     for (int i = 0; i < maxAttempts; i++)
     //     {
-    //         float xDistance = Mathf.Abs(closestPipe.transform.position.x - spawnX);
+    //         GameObject closestPipe = GetClosestPipe(spawnX);
 
-    //         Debug.Log(
-    //             "spawnX: " + spawnX +
-    //             " | closestPipe: " + closestPipe.name +
-    //             " | pipeX: " + closestPipe.transform.position.x +
-    //             " | pipeY: " + closestPipe.transform.position.y +
-    //             " | xDistance: " + xDistance +
-    //             " | pipeCheckDistance: " + pipeCheckDistance
-    //         );
+    //         if (closestPipe != null)
+    //         {
+    //             float pipeX = closestPipe.transform.position.x;
+    //             float distToPipe = Mathf.Abs(pipeX - spawnX);
 
-    //         if (xDistance < pipeCheckDistance)
-    //         {
-    //             float gapCenterY = closestPipe.transform.position.y;
-    //             spawnY = gapCenterY + Random.Range(-gapOffset, gapOffset);
-    //             Debug.Log("Using GAP spawn");
-    //         }
-    //         else
-    //         {
-    //             if (Random.value > 0.5f)
+    //             // If we are horizontally too close to a pipe (less than 1.5 units)
+    //             // We restrict the vertical spawn range to be IN the middle of the gap
+    //             if (distToPipe < 1.5f)
     //             {
-    //                 spawnY = Random.Range(0.4f, maxY);
+    //                 float gapCenterY = closestPipe.transform.position.y;
+    //                 // Constraints: Spawn only within the flyable gap
+    //                 spawnY = Random.Range(gapCenterY - 0.15f, gapCenterY + 0.15f);
     //             }
     //             else
     //             {
-    //                 spawnY = Random.Range(minY, 0.1f);
+    //                 // We are far from a pipe, use full vertical range
+    //                 spawnY = Random.Range(minY, maxY);
     //             }
-    //             Debug.Log("Using FREE spawn");
-    //         }
-    //     }
-    //     else
-    //     {
-    //         if (Random.value > 0.5f)
-    //         {
-    //             spawnY = Random.Range(0.4f, maxY);
     //         }
     //         else
     //         {
-    //             spawnY = Random.Range(minY, 0.1f);
+    //             spawnY = Random.Range(minY, maxY);
     //         }
-    //         Debug.Log("Using FREE spawn - no pipe found");
+
+    //         Vector3 spawnPos = new Vector3(spawnX, spawnY, 0f);
+
+    //         // 3. Final safety check: Is this overlapping a pipe object?
+    //         if (IsSpawnPositionClear(spawnPos))
+    //         {
+    //             Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
+    //             return; // SUCCESS! → stop trying
+    //         }
+    //     }
+
+    //     // If all attempts fail, don't spawn a bird on this interval.
+    // }
+
+
+    // void SpawnEnemy()
+    // {
+    //     // 1. Force the bird to spawn horizontally AWAY from the pipe spawner
+    //     // If your PipeSpawner is at x=10, spawn birds at x=15
+    //     float spawnX = transform.position.x + 2.5f;
+    //     float spawnY;
+
+    //     // 2. Use the 'lastPipeY' from your PipeSpawner script to find the gap
+    //     // This is the most reliable way since you already save this value!
+    //     float gapY = PipeSpawner.lastPipeY;
+
+    //     // 3. We use a 50/50 chance for the bird's position:
+    //     if (Random.value > 0.5f)
+    //     {
+    //         // Option A: Spawn the bird EXACTLY in the middle of the gap
+    //         // This is always 'fair' because the player is already heading here
+    //         spawnY = gapY;
+    //     }
+    //     else
+    //     {
+    //         // Option B: Spawn it slightly above or below the gap center 
+    //         // but still within the 'safe' opening
+    //         spawnY = gapY + Random.Range(-0.15f, 0.15f);
     //     }
 
     //     Vector3 spawnPos = new Vector3(spawnX, spawnY, 0f);
 
+    //     // 4. Final check: if it's still hitting something, don't spawn
     //     if (IsSpawnPositionClear(spawnPos))
     //     {
     //         Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
-    //         Debug.Log("Enemy spawned at: " + spawnPos);
-    //     }
-    //     else
-    //     {
-    //         Debug.Log("Blocked enemy spawn at: " + spawnPos);
     //     }
     // }
 
-    void SpawnEnemy()
-    {
-        float spawnX = transform.position.x;
-        float spawnY;
+    // private void SpawnPipe()
+    // {
+    //     float randomY = Random.Range(minY, maxY);
+    //     Vector3 spawnPos = new Vector3(transform.position.x, randomY, 0);
 
-        GameObject closestPipe = GetClosestPipe(spawnX);
+    //     GameObject pipeN = Instantiate(pipe, spawnPos, Quaternion.identity);
 
-        if (closestPipe != null && Mathf.Abs(closestPipe.transform.position.x - spawnX) < pipeCheckDistance)
-        {
-            float gapCenterY = closestPipe.transform.position.y;
-            spawnY = gapCenterY + Random.Range(-gapOffset, gapOffset);
-        }
-        else
-        {
-            if (Random.value > 0.5f)
-            {
-                spawnY = Random.Range(0.4f, maxY);
-            }
-            else
-            {
-                spawnY = Random.Range(minY, 0.1f);
-            }
-        }
+    //     // --- NEW ENEMY LOGIC ---
+    //     // 50% chance to spawn an enemy inside this specific pipe's gap
+    //     if (Random.value > 0.5f)
+    //     {
+    //         // Find the spawn point we just created in the prefab
+    //         Transform spawnPoint = pipeN.transform.Find("EnemySpawnPoint");
+    //         if (spawnPoint != null)
+    //         {
+    //             // Spawn the enemy bird at that exact spot
+    //             // (Assuming you have a reference to your enemyPrefab here)
+    //             // Instantiate(enemyPrefab, spawnPoint.position, Quaternion.identity, pipeN.transform);
+    //         }
+    //     }
+    //     // -----------------------
 
-        Vector3 spawnPos = new Vector3(spawnX, spawnY, 0f);
+    //     Destroy(pipeN, 10f);
+    //     lastPipeY = randomY;
+    // }
 
-        if (IsSpawnPositionClear(spawnPos))
-        {
-            Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
-            Debug.Log("Enemy spawned at: " + spawnPos);
-        }
-        else
-        {
-            Debug.Log("Blocked enemy spawn at: " + spawnPos);
-        }
-    }
+
+    // bool IsSpawnPositionClear(Vector3 spawnPos)
+    // {
+    //     // The size of the box we are checking (roughly the size of the enemy bird)
+    //     Vector2 checkSize = new Vector2(0.8f, 0.8f);
+
+    //     // Create a layermask for the "Pipes" layer we created.
+    //     int pipeLayerMask = LayerMask.GetMask("Pipes");
+
+    //     // OverlapBoxAll only detects objects in the specified layer mask.
+    //     Collider2D[] hits = Physics2D.OverlapBoxAll(spawnPos, checkSize, 0f, pipeLayerMask);
+
+    //     // If this array is not empty, it means we hit a pipe. Return false.
+    //     if (hits.Length > 0)
+    //     {
+    //         return false;
+    //     }
+
+    //     return true; // We hit nothing in the Pipes layer.
+    // }
+
 
     GameObject GetClosestPipe(float xPos)
     {
@@ -184,7 +269,8 @@ public class EnemySpawner : MonoBehaviour
 
         Collider2D[] hits = Physics2D.OverlapBoxAll(
             spawnPos,
-            new Vector2(checkHalfWidth * 2f, checkHalfHeight * 2f),
+            // new Vector2(checkHalfWidth * 2f, checkHalfHeight * 2f), // doubled already, we are overchecking
+            new Vector2(checkHalfWidth, checkHalfHeight),
             0f
         );
 
