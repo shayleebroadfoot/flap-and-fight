@@ -10,6 +10,12 @@ public class FlyBehaviour : MonoBehaviour
 
     // Health system variables
     [SerializeField] private int health = 3;
+
+    [SerializeField] private GameObject bulletPrefab;
+
+    [SerializeField] private Transform shootingPoint; // Where the bullet spawns (the bird's beak)
+
+
     private float invincibilityTime = 3f;
     private bool isInvincible = false;
 
@@ -31,12 +37,24 @@ public class FlyBehaviour : MonoBehaviour
         {
             rb.linearVelocity = Vector2.up * velocityBird;
         }
+
+        // this is for shooting enemies
+        if (Keyboard.current.spaceKey.wasPressedThisFrame)
+        {
+            Shoot();
+        }
     }
 
     private void FixedUpdate()
     {
         //  to control the slight tilt of the bird when it is flapping
         transform.rotation = Quaternion.Euler(0, 0, rb.linearVelocityY * rotationSpeed);
+    }
+
+    void Shoot()
+    {
+        // Create the bullet at the shooting point's position
+        Instantiate(bulletPrefab, shootingPoint.position, Quaternion.identity);
     }
 
     void OnCollisionEnter2D(Collision2D collision)
