@@ -9,6 +9,7 @@ TagManager:
   - Pipe
   - Undefined
   - LowerPipe
+  - HeartPowerUp
   layers:
   - Default
   - TransparentFX

@@ -34,6 +34,21 @@ public class HeartManager : MonoBehaviour
             Destroy(lastHeart);
         }
     }
+
+    public void AddHeart()
+    {
+        // Don't add more hearts than the maximum allowed
+        if (hearts.Count < maxHearts)
+        {
+            GameObject heart = Instantiate(heartPrefab, transform);
+            RectTransform rt = heart.GetComponent<RectTransform>();
+
+            // Position it based on how many hearts we already have
+            rt.anchoredPosition = new Vector2(hearts.Count * spacing, 0);
+
+            hearts.Add(heart);
+        }
+    }
 }
 
 // using UnityEngine;

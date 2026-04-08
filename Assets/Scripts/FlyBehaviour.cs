@@ -32,6 +32,7 @@ public class FlyBehaviour : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log("Player position: " + transform.position);
         // if we click we will add upwards velocity
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {
@@ -85,6 +86,32 @@ public class FlyBehaviour : MonoBehaviour
                 Debug.Log("Ignored due to invincibility");
             }
         }
+
+        if (collision.CompareTag("HeartPowerUp"))
+        {
+            // 1. Find the HeartManager and add a heart
+            // HeartManager heartManager = Object.FindFirstObjectByType<HeartManager>();
+            // if (heartManager != null)
+            // {
+            //     heartManager.AddHeart();
+            // }
+
+            // // 2. Destroy the heart in the world so you can't pick it up twice
+            // Destroy(collision.gameObject);
+            HeartPowerUp heart = collision.GetComponent<HeartPowerUp>();
+
+            if (heart != null && heart.CanBeCollected())
+            {
+                HeartManager heartManager = Object.FindFirstObjectByType<HeartManager>();
+                if (heartManager != null)
+                {
+                    heartManager.AddHeart();
+                    health++;
+                }
+
+                Destroy(collision.gameObject);
+            }
+        }
     }
     void TakeDamage(int damage)
     {
@@ -92,7 +119,7 @@ public class FlyBehaviour : MonoBehaviour
         Debug.Log("Health now: " + health);
 
         // Remove one heart from the UI
-        HeartManager heartManager = HeartManager.FindFirstObjectByType<HeartManager>(); // this line is sus: find any object of find first object or find by tag???
+        HeartManager heartManager = HeartManager.FindFirstObjectByType<HeartManager>(); // this line is ??: find any object of find first object or find by tag???
         if (heartManager != null)
         {
             heartManager.LoseHeart();

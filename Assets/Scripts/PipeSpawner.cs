@@ -11,6 +11,8 @@ public class PipeSpawner : MonoBehaviour
 
     [SerializeField] private float birdSpawnChance = 0.5f;
 
+    [SerializeField] private GameObject heartPowerUpPrefab;
+
 
     public static float lastPipeY;
     private float minY = -0.2f;   // above ground
@@ -81,28 +83,36 @@ public class PipeSpawner : MonoBehaviour
         float randomY = Random.Range(minY, maxY);
         Vector3 spawnPos = new Vector3(transform.position.x, randomY, 0);
 
-        // 1. Spawn the Pipe (This moves because it has a script)
+        // 1. Spawn the Pipe
         GameObject pipeN = Instantiate(pipe, spawnPos, Quaternion.identity);
         Destroy(pipeN, 10f);
 
-        // 2. Spawn the Bird (This will NOT move)
-        if (Random.value < birdSpawnChance)
+        float chance = Random.value;
+
+        float playerX = GameObject.FindGameObjectWithTag("Player").transform.position.x; // new........
+
+        if (chance < 0.1f) // 10% chance for a heart power-up
         {
+            // REMOVED "Vector3" from the start of the next line
+            Vector3 heartPos = new Vector3(playerX + 5f, randomY, 0f);
+            // Vector3 heartPos = new Vector3(transform.position.x + 11.0f, randomY, 0f);
+            // Vector3 heartPos = new Vector3(spawnPos.x + 5.0f, randomY, 0f);
+            // Vector3 heartPos = new Vector3(spawnPos.x + 1.2f, randomY, 0f);
+            Instantiate(heartPowerUpPrefab, heartPos, Quaternion.identity);
+        }
+        else if (chance < birdSpawnChance) // Spawn bird if heart didn't spawn
+        {
+            // REMOVED the extra 'if (Random.value < birdSpawnChance)' because 
+            // it was already checked in the 'else if' above.
+
             float randomXOffset = Random.Range(0.8f, 1.5f);
             Vector3 birdPos = new Vector3(spawnPos.x + randomXOffset, randomY, 0);
 
-            // GameObject bird = Instantiate(enemyPrefab, birdPos, Quaternion.identity);
-
-            // // REMOVE THIS LINE IF IT IS THERE:
-            // // bird.transform.parent = pipeN.transform; 
-
-            // Destroy(bird, 10f);
-
+            // Check if the spot is clear
             Collider2D hit = Physics2D.OverlapCircle(birdPos, 0.5f);
 
             if (hit == null)
             {
-                // If the spot is empty, spawn the bird!
                 GameObject bird = Instantiate(enemyPrefab, birdPos, Quaternion.identity);
                 Destroy(bird, 10f);
             }
@@ -112,5 +122,23 @@ public class PipeSpawner : MonoBehaviour
             }
         }
     }
+    // private void SpawnPipe()
+    // {
+    //     float randomY = Random.Range(minY, maxY);
+    //     Vector3 spawnPos = new Vector3(transform.position.x, randomY, 0);
+
+    //     GameObject pipeN = Instantiate(pipe, spawnPos, Quaternion.identity);
+    //     Destroy(pipeN, 10f);
+
+    //     // TEMPORARY TEST: Force heart to spawn every time
+    //     // Change 'false' to 'true' or just remove the 'if' to test
+    //     Vector3 heartPos = new Vector3(spawnPos.x + 1.2f, randomY, 0f);
+    //     GameObject newHeart = Instantiate(heartPowerUpPrefab, heartPos, Quaternion.identity);
+
+    //     if (newHeart != null)
+    //     {
+    //         Debug.Log("HEART CREATED AT: " + heartPos);
+    //     }
+    // }
 
 }

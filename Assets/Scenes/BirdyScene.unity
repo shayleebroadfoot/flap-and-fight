@@ -1429,7 +1429,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1617361695
 Transform:
   m_ObjectHideFlags: 0
@@ -1991,6 +1991,9 @@ MonoBehaviour:
   maxTime: 2.5
   heightRange: 0.45
   pipe: {fileID: 6864496104962893990, guid: 4107539daad786e4c99b717134b36e94, type: 3}
+  enemyPrefab: {fileID: 2978289246355277817, guid: f7181a5867ee046c4aae8b394e224de1, type: 3}
+  birdSpawnChance: 0.9
+  heartPowerUpPrefab: {fileID: 3407975984839895527, guid: 23fcd9e55e4273d46b3a221c6810fe4b, type: 3}
 --- !u!4 &1884794996
 Transform:
   m_ObjectHideFlags: 0
