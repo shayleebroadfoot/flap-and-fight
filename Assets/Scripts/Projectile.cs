@@ -23,6 +23,12 @@ public class Projectile : MonoBehaviour
         // If we hit an enemy, destroy both the enemy and the bullet
         if (collision.CompareTag("Enemy"))
         {
+            if (Score.instance != null)
+            {
+                Score.instance.UpdateScore();
+            }
+
+
             Destroy(collision.gameObject);
             Destroy(gameObject);
             // You could also add Score.instance.UpdateScore() here!

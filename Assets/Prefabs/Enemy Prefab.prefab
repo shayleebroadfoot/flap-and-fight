@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1323026232852610607}
   - component: {fileID: 2531491146310645661}
   - component: {fileID: -2412219002882306982}
+  - component: {fileID: -2637592557799990083}
   m_Layer: 0
   m_Name: Enemy Prefab
   m_TagString: Enemy
@@ -166,6 +167,19 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 1.96
+--- !u!114 &-2637592557799990083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2978289246355277817}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54b43583cfad5174f81f3e796e03539a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MovePipe
+  speedPipe: 0.65
 --- !u!1 &5687821571654299806
 GameObject:
   m_ObjectHideFlags: 0
