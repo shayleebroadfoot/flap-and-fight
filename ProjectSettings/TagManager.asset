@@ -10,6 +10,7 @@ TagManager:
   - Undefined
   - LowerPipe
   - HeartPowerUp
+  - ShieldPowerUp
   layers:
   - Default
   - TransparentFX

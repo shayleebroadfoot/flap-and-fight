@@ -13,6 +13,8 @@ public class PipeSpawner : MonoBehaviour
 
     [SerializeField] private GameObject heartPowerUpPrefab;
 
+    [SerializeField] private GameObject shieldPowerUpPrefab;
+
 
     public static float lastPipeY;
     private float minY = -0.2f;   // above ground
@@ -78,67 +80,132 @@ public class PipeSpawner : MonoBehaviour
     //     }
     // }
 
-    private void SpawnPipe()
-    {
-        float randomY = Random.Range(minY, maxY);
-        Vector3 spawnPos = new Vector3(transform.position.x, randomY, 0);
-
-        // 1. Spawn the Pipe
-        GameObject pipeN = Instantiate(pipe, spawnPos, Quaternion.identity);
-        Destroy(pipeN, 10f);
-
-        float chance = Random.value;
-
-        float playerX = GameObject.FindGameObjectWithTag("Player").transform.position.x; // new........
-
-        if (chance < 0.1f) // 10% chance for a heart power-up
-        {
-            // REMOVED "Vector3" from the start of the next line
-            Vector3 heartPos = new Vector3(playerX + 5f, randomY, 0f);
-            // Vector3 heartPos = new Vector3(transform.position.x + 11.0f, randomY, 0f);
-            // Vector3 heartPos = new Vector3(spawnPos.x + 5.0f, randomY, 0f);
-            // Vector3 heartPos = new Vector3(spawnPos.x + 1.2f, randomY, 0f);
-            Instantiate(heartPowerUpPrefab, heartPos, Quaternion.identity);
-        }
-        else if (chance < birdSpawnChance) // Spawn bird if heart didn't spawn
-        {
-            // REMOVED the extra 'if (Random.value < birdSpawnChance)' because 
-            // it was already checked in the 'else if' above.
-
-            float randomXOffset = Random.Range(0.8f, 1.5f);
-            Vector3 birdPos = new Vector3(spawnPos.x + randomXOffset, randomY, 0);
-
-            // Check if the spot is clear
-            Collider2D hit = Physics2D.OverlapCircle(birdPos, 0.5f);
-
-            if (hit == null)
-            {
-                GameObject bird = Instantiate(enemyPrefab, birdPos, Quaternion.identity);
-                Destroy(bird, 10f);
-            }
-            else
-            {
-                Debug.Log("Spawn blocked: Another bird was too close!");
-            }
-        }
-    }
     // private void SpawnPipe()
     // {
     //     float randomY = Random.Range(minY, maxY);
     //     Vector3 spawnPos = new Vector3(transform.position.x, randomY, 0);
 
+    //     // 1. Spawn the Pipe
     //     GameObject pipeN = Instantiate(pipe, spawnPos, Quaternion.identity);
     //     Destroy(pipeN, 10f);
 
-    //     // TEMPORARY TEST: Force heart to spawn every time
-    //     // Change 'false' to 'true' or just remove the 'if' to test
-    //     Vector3 heartPos = new Vector3(spawnPos.x + 1.2f, randomY, 0f);
-    //     GameObject newHeart = Instantiate(heartPowerUpPrefab, heartPos, Quaternion.identity);
+    //     float chance = Random.value;
 
-    //     if (newHeart != null)
+    //     // --- TEST: Increase these to 0.5f just to see if they spawn! ---
+    //     if (chance < 0.1f)
     //     {
-    //         Debug.Log("HEART CREATED AT: " + heartPos);
+    //         // Use spawnPos.x so it stays relative to the pipes
+    //         Vector3 heartPos = new Vector3(spawnPos.x + 2f, randomY, 0f);
+    //         Instantiate(heartPowerUpPrefab, heartPos, Quaternion.identity);
+    //     }
+    //     else if (chance < 0.2f) // Shield chance
+    //     {
+    //         Vector3 shieldPos = new Vector3(spawnPos.x + 2f, randomY, 0f);
+    //         Instantiate(shieldPowerUpPrefab, shieldPos, Quaternion.identity);
+    //     }
+    //     else if (chance < birdSpawnChance)
+    //     {
+    //         float randomXOffset = Random.Range(0.8f, 1.5f);
+    //         Vector3 birdPos = new Vector3(spawnPos.x + randomXOffset, randomY, 0);
+
+    //         Collider2D hit = Physics2D.OverlapCircle(birdPos, 0.5f);
+    //         if (hit == null)
+    //         {
+    //             GameObject bird = Instantiate(enemyPrefab, birdPos, Quaternion.identity);
+    //             Destroy(bird, 10f);
+    //         }
     //     }
     // }
+
+    // force spawn shield instead of pipe.
+    private void SpawnPipe()
+    {
+        // 1. Always Spawn the Pipe
+        float randomY = Random.Range(minY, maxY);
+        Vector3 spawnPos = new Vector3(transform.position.x, randomY, 0);
+
+        GameObject pipeN = Instantiate(pipe, spawnPos, Quaternion.identity);
+        Destroy(pipeN, 10f);
+
+        // 2. Heart Spawn (Independent)
+        if (Random.value < 0.1f)
+        {
+            Vector3 heartPos = new Vector3(spawnPos.x + 2f, randomY, 0f);
+            if (heartPowerUpPrefab != null) Instantiate(heartPowerUpPrefab, heartPos, Quaternion.identity);
+        }
+
+        // 3. Shield Spawn (Independent)
+        if (Random.value < 0.1f)
+        {
+            Vector3 shieldPos = new Vector3(spawnPos.x + 4f, randomY, 0f); // Offset so it doesn't hit the heart
+            if (shieldPowerUpPrefab != null) Instantiate(shieldPowerUpPrefab, shieldPos, Quaternion.identity);
+        }
+
+        // 4. Bird Spawn (Independent)
+        if (Random.value < birdSpawnChance)
+        {
+            float randomXOffset = Random.Range(0.8f, 1.5f);
+            Vector3 birdPos = new Vector3(spawnPos.x + randomXOffset, randomY, 0);
+
+            // Safety check so birds don't stack
+            Collider2D hit = Physics2D.OverlapCircle(birdPos, 0.5f);
+            if (hit == null)
+            {
+                GameObject bird = Instantiate(enemyPrefab, birdPos, Quaternion.identity);
+                Destroy(bird, 10f);
+            }
+        }
+    }
+
+    // private void SpawnPipe()   // this is working wanted to track sheild
+    // {
+    //     float randomY = Random.Range(minY, maxY);
+    //     Vector3 spawnPos = new Vector3(transform.position.x, randomY, 0);
+
+    //     // 1. Spawn the Pipe
+    //     GameObject pipeN = Instantiate(pipe, spawnPos, Quaternion.identity);
+    //     Destroy(pipeN, 10f);
+
+    //     float chance = Random.value;
+
+    //     float playerX = GameObject.FindGameObjectWithTag("Player").transform.position.x; // new........
+
+    //     if (chance < 0.1f) // 10% chance for a heart power-up
+    //     {
+    //         // REMOVED "Vector3" from the start of the next line
+    //         Vector3 heartPos = new Vector3(playerX + 5f, randomY, 0f);
+    //         // Vector3 heartPos = new Vector3(transform.position.x + 11.0f, randomY, 0f);
+    //         // Vector3 heartPos = new Vector3(spawnPos.x + 5.0f, randomY, 0f);
+    //         // Vector3 heartPos = new Vector3(spawnPos.x + 1.2f, randomY, 0f);
+    //         Instantiate(heartPowerUpPrefab, heartPos, Quaternion.identity);
+    //     }
+    //     if (Random.value < 0.1f) // 10% chance
+    //     {
+    //         Vector3 shieldPos = new Vector3(spawnPos.x + 1.5f, randomY, 0f);
+    //         Instantiate(shieldPowerUpPrefab, shieldPos, Quaternion.identity);
+    //     }
+    //     else if (chance < birdSpawnChance) // Spawn bird if heart didn't spawn
+    //     {
+    //         // REMOVED the extra 'if (Random.value < birdSpawnChance)' because 
+    //         // it was already checked in the 'else if' above.
+
+    //         float randomXOffset = Random.Range(0.8f, 1.5f);
+    //         Vector3 birdPos = new Vector3(spawnPos.x + randomXOffset, randomY, 0);
+
+    //         // Check if the spot is clear
+    //         Collider2D hit = Physics2D.OverlapCircle(birdPos, 0.5f);
+
+    //         if (hit == null)
+    //         {
+    //             GameObject bird = Instantiate(enemyPrefab, birdPos, Quaternion.identity);
+    //             Destroy(bird, 10f);
+    //         }
+    //         else
+    //         {
+    //             Debug.Log("Spawn blocked: Another bird was too close!");
+    //         }
+    //     }
+    // }
+
 
 }

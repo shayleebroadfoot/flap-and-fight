@@ -15,6 +15,11 @@ public class FlyBehaviour : MonoBehaviour
 
     [SerializeField] private Transform shootingPoint; // Where the bullet spawns (the bird's beak)
 
+    [SerializeField] private GameObject shieldVisual;
+    [SerializeField] private float shieldDuration = 5f;
+
+    private bool hasShield = false;
+
 
     private float invincibilityTime = 3f;
     private bool isInvincible = false;
@@ -32,7 +37,7 @@ public class FlyBehaviour : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("Player position: " + transform.position);
+        // Debug.Log("Player position: " + transform.position);
         // if we click we will add upwards velocity
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {
@@ -43,6 +48,12 @@ public class FlyBehaviour : MonoBehaviour
         if (Keyboard.current.spaceKey.wasPressedThisFrame)
         {
             Shoot();
+        }
+
+        if (hasShield && shieldVisual != null)
+        {
+            float scale = 1.5f + Mathf.Sin(Time.time * 5f) * 0.1f;
+            shieldVisual.transform.localScale = new Vector3(scale, scale, 1);
         }
     }
 
@@ -72,19 +83,29 @@ public class FlyBehaviour : MonoBehaviour
     {
         Debug.Log("Triggered with: " + collision.gameObject.name + " Tag: " + collision.gameObject.tag);
 
+        if (collision.CompareTag("ShieldPowerUp"))
+        {
+            ActivateShield();
+            Destroy(collision.gameObject);
+        }
+
         if (collision.gameObject.CompareTag("Enemy"))
         {
             Debug.Log("Enemy detected");
+
+            if (hasShield)
+            {
+                Debug.Log("Shield absorbed damage!");
+                Destroy(collision.gameObject); // optional
+                return;
+            }
 
             if (!isInvincible)
             {
                 Debug.Log("Taking damage");
                 TakeDamage(1);
             }
-            else
-            {
-                Debug.Log("Ignored due to invincibility");
-            }
+
         }
 
         if (collision.CompareTag("HeartPowerUp"))
@@ -98,23 +119,50 @@ public class FlyBehaviour : MonoBehaviour
 
             // // 2. Destroy the heart in the world so you can't pick it up twice
             // Destroy(collision.gameObject);
-            HeartPowerUp heart = collision.GetComponent<HeartPowerUp>();
+            // HeartPowerUp heart = collision.GetComponent<HeartPowerUp>();
 
-            if (heart != null && heart.CanBeCollected())
+            // if (heart != null && heart.CanBeCollected())
+            // {
+            //     // HeartManager heartManager = Object.FindFirstObjectByType<HeartManager>();
+            //     HeartManager heartManager = Object.FindFirstObjectByType<HeartManager>();
+            //     if (heartManager != null)
+            //     {
+            //         heartManager.AddHeart();
+            //         health++;
+            //     }
+
+            //     Destroy(collision.gameObject);
+            // }
+            HeartManager heartManager = Object.FindFirstObjectByType<HeartManager>();
+
+            // 1. Check if we actually need healing
+            if (health < 3)
             {
-                HeartManager heartManager = Object.FindFirstObjectByType<HeartManager>();
                 if (heartManager != null)
                 {
-                    heartManager.AddHeart();
-                    health++;
+                    heartManager.AddHeart(); // Update UI
                 }
-
-                Destroy(collision.gameObject);
+                health++; // Increase internal health
+                Debug.Log("Healed! Health is now: " + health);
             }
+            else
+            {
+                // 2. Health is full (3), so add a point instead
+                if (Score.instance != null)
+                {
+                    Score.instance.UpdateScore();
+                    Debug.Log("Full health! +1 Point added instead.");
+                }
+            }
+
+            // Always destroy the heart after it is collected
+            Destroy(collision.gameObject);
         }
     }
     void TakeDamage(int damage)
     {
+
+        if (hasShield) return;
         health -= damage;
         Debug.Log("Health now: " + health);
 
@@ -141,5 +189,23 @@ public class FlyBehaviour : MonoBehaviour
         yield return new WaitForSeconds(invincibilityTime);
 
         isInvincible = false;
+    }
+
+    public void ActivateShield()
+    {
+        if (hasShield) return;
+
+        hasShield = true;
+        shieldVisual.SetActive(true);
+
+        StartCoroutine(ShieldCoroutine());
+    }
+
+    IEnumerator ShieldCoroutine()
+    {
+        yield return new WaitForSeconds(shieldDuration);
+
+        hasShield = false;
+        shieldVisual.SetActive(false);
     }
 }
