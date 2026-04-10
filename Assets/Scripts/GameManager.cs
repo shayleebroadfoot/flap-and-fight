@@ -3,22 +3,12 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-
-    //  have a singleton so you can call it from anywhere
     public static GameManager instance;
 
     [SerializeField] private GameObject gameOverCanvas;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
+    [SerializeField] private GameObject startCanvas;
 
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
+    private bool gameStarted = false;
 
     private void Awake()
     {
@@ -27,19 +17,36 @@ public class GameManager : MonoBehaviour
             instance = this;
         }
 
-        // set back to normal at start of game
+        Time.timeScale = 0f;
+    }
+
+    private void Start()
+    {
+        startCanvas.SetActive(true);
+        gameOverCanvas.SetActive(false);
+    }
+
+    public void StartGame()
+    {
+        gameStarted = true;
+        startCanvas.SetActive(false);
         Time.timeScale = 1f;
     }
 
     public void GameOver()
     {
+        if (!gameStarted)
+        {
+            return;
+        }
+        
         gameOverCanvas.SetActive(true);
         Time.timeScale = 0f;
     }
 
     public void RestartGame()
     {
-        // restand by loading current scene
+        Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }
