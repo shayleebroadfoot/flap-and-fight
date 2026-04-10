@@ -2575,7 +2575,7 @@ MonoBehaviour:
   staticBirdSpawnChance: 0.5
   divingBirdSpawnChance: 0.2
   heartPowerUpPrefab: {fileID: 4074769748359991123, guid: 3f3b216464a354a42b5506e4da74974a, type: 3}
-  shieldPowerUpPrefab: {fileID: 7772006149421952871, guid: 1e81c1fbbb3c7144cb6c075372c66129, type: 3}
+  shieldPowerUpPrefab: {fileID: 982020997734445863, guid: dcfa41ff08e80954a9c9ee4c0d9ce283, type: 3}
   minY: -0.2
   maxY: 0.8
   divingBirdMinXOffset: 2.5
