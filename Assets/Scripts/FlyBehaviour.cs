@@ -18,8 +18,12 @@ public class FlyBehaviour : MonoBehaviour
     [SerializeField] private GameObject shieldVisual;
     [SerializeField] private float shieldDuration = 5f;
 
-    private bool hasShield = false;
+    // Damage Indicators
+    private SpriteRenderer spriteRenderer;
+    [SerializeField] private float flashInterval = 0.1f;
+    [SerializeField] private int flashCount = 6;
 
+    private bool hasShield = false;
 
     private float invincibilityTime = 3f;
     private bool isInvincible = false;
@@ -31,6 +35,7 @@ public class FlyBehaviour : MonoBehaviour
     {
         //  grab the rigid body in start
         rb = GetComponent<Rigidbody2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
         Debug.Log("Health:  " + health);
     }
 
@@ -173,6 +178,7 @@ public class FlyBehaviour : MonoBehaviour
         }
 
         StartCoroutine(InvincibilityCoroutine());
+        StartCoroutine(FlashCoroutine());
     }
 
     IEnumerator InvincibilityCoroutine()
@@ -210,5 +216,24 @@ public class FlyBehaviour : MonoBehaviour
         {
             AudioManager.instance.PlayNormalMusic();
         }
+    }
+
+    IEnumerator FlashCoroutine()
+    {
+        if (spriteRenderer == null)
+        {
+            yield break;
+        }
+
+        for (int i = 0; i < flashCount; i++)
+        {
+            spriteRenderer.enabled = false;
+            yield return new WaitForSeconds(flashInterval);
+
+            spriteRenderer.enabled = true;
+            yield return new WaitForSeconds(flashInterval);
+        }
+
+        spriteRenderer.enabled = true;
     }
 }
