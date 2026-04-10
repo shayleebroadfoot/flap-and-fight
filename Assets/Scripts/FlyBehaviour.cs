@@ -67,6 +67,10 @@ public class FlyBehaviour : MonoBehaviour
     {
         // Create the bullet at the shooting point's position
         Instantiate(bulletPrefab, shootingPoint.position, Quaternion.identity);
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.PlayShootSfx();
+        }
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -96,58 +100,44 @@ public class FlyBehaviour : MonoBehaviour
             if (hasShield)
             {
                 Debug.Log("Shield absorbed damage!");
-                Destroy(collision.gameObject); // optional
+                Destroy(collision.gameObject);
                 return;
             }
 
             if (!isInvincible)
             {
                 Debug.Log("Taking damage");
+
+                if (AudioManager.instance != null)
+                {
+                    AudioManager.instance.PlayEnemyHitSfx();
+                }
+
                 TakeDamage(1);
             }
-
         }
 
         if (collision.CompareTag("HeartPowerUp"))
         {
-            // 1. Find the HeartManager and add a heart
-            // HeartManager heartManager = Object.FindFirstObjectByType<HeartManager>();
-            // if (heartManager != null)
-            // {
-            //     heartManager.AddHeart();
-            // }
-
-            // // 2. Destroy the heart in the world so you can't pick it up twice
-            // Destroy(collision.gameObject);
-            // HeartPowerUp heart = collision.GetComponent<HeartPowerUp>();
-
-            // if (heart != null && heart.CanBeCollected())
-            // {
-            //     // HeartManager heartManager = Object.FindFirstObjectByType<HeartManager>();
-            //     HeartManager heartManager = Object.FindFirstObjectByType<HeartManager>();
-            //     if (heartManager != null)
-            //     {
-            //         heartManager.AddHeart();
-            //         health++;
-            //     }
-
-            //     Destroy(collision.gameObject);
-            // }
             HeartManager heartManager = Object.FindFirstObjectByType<HeartManager>();
 
-            // 1. Check if we actually need healing
+            if (AudioManager.instance != null)
+            {
+                AudioManager.instance.PlayHeartPickupSfx();
+            }
+
             if (health < 3)
             {
                 if (heartManager != null)
                 {
-                    heartManager.AddHeart(); // Update UI
+                    heartManager.AddHeart();
                 }
-                health++; // Increase internal health
+
+                health++;
                 Debug.Log("Healed! Health is now: " + health);
             }
             else
             {
-                // 2. Health is full (3), so add a point instead
                 if (Score.instance != null)
                 {
                     Score.instance.UpdateScore();
@@ -155,7 +145,6 @@ public class FlyBehaviour : MonoBehaviour
                 }
             }
 
-            // Always destroy the heart after it is collected
             Destroy(collision.gameObject);
         }
     }
@@ -198,6 +187,11 @@ public class FlyBehaviour : MonoBehaviour
         hasShield = true;
         shieldVisual.SetActive(true);
 
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.PlayPowerUpMusic();
+        }
+
         StartCoroutine(ShieldCoroutine());
     }
 
@@ -207,5 +201,10 @@ public class FlyBehaviour : MonoBehaviour
 
         hasShield = false;
         shieldVisual.SetActive(false);
+
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.PlayNormalMusic();
+        }
     }
 }
