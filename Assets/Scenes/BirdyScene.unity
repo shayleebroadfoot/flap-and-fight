@@ -2623,6 +2623,8 @@ MonoBehaviour:
   shootingPoint: {fileID: 1594043625}
   shieldVisual: {fileID: 13401549}
   shieldDuration: 5
+  flashInterval: 0.1
+  flashCount: 6
 --- !u!1 &1884794994
 GameObject:
   m_ObjectHideFlags: 0
@@ -2655,10 +2657,18 @@ MonoBehaviour:
   maxTime: 2.5
   heightRange: 0.45
   pipe: {fileID: 6864496104962893990, guid: 4107539daad786e4c99b717134b36e94, type: 3}
-  enemyPrefab: {fileID: 2978289246355277817, guid: f7181a5867ee046c4aae8b394e224de1, type: 3}
-  birdSpawnChance: 0.7
+  staticEnemyPrefab: {fileID: 2978289246355277817, guid: f7181a5867ee046c4aae8b394e224de1, type: 3}
+  divingEnemyPrefab: {fileID: 3861435326603940509, guid: 16eda9fd67027425a8b1529ac99e040a, type: 3}
+  staticBirdSpawnChance: 0.5
+  divingBirdSpawnChance: 0.2
   heartPowerUpPrefab: {fileID: 4074769748359991123, guid: 3f3b216464a354a42b5506e4da74974a, type: 3}
   shieldPowerUpPrefab: {fileID: 7772006149421952871, guid: 1e81c1fbbb3c7144cb6c075372c66129, type: 3}
+  minY: -0.2
+  maxY: 0.8
+  divingBirdMinXOffset: 2.5
+  divingBirdMaxXOffset: 4
+  divingBirdCheckRadius: 0.5
+  divingBirdSpawnAttempts: 10
 --- !u!4 &1884794996
 Transform:
   m_ObjectHideFlags: 0

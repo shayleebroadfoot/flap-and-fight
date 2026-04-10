@@ -14,10 +14,4 @@ public class PipeIncreaseScore : MonoBehaviour
             // Debug.Log("Triggered!");
         }
     }
-
-    // Update is called once per frame
-    // void Update()
-    // {
-
-    // }
 }
