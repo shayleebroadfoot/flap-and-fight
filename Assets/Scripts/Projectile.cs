@@ -4,6 +4,7 @@ public class Projectile : MonoBehaviour
 {
     [SerializeField] private float speed = 5f;
     [SerializeField] private float lifeTime = 2f;
+    [SerializeField] private GameObject enemyHitParticlesPrefab;
 
     void Start()
     {
@@ -19,8 +20,8 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("Bullet hit: " + collision.gameObject.name + " with Tag: " + collision.gameObject.tag);
-        // If we hit an enemy, destroy both the enemy and the bullet
+        Debug.Log("Bullet trigger hit: " + collision.gameObject.name + " Tag: " + collision.gameObject.tag);
+
         if (collision.CompareTag("Enemy"))
         {
             if (Score.instance != null)
@@ -28,10 +29,23 @@ public class Projectile : MonoBehaviour
                 Score.instance.UpdateScore();
             }
 
+            if (enemyHitParticlesPrefab != null)
+            {
+                Instantiate(enemyHitParticlesPrefab, collision.transform.position, Quaternion.identity);
+            }
 
             Destroy(collision.gameObject);
             Destroy(gameObject);
-            // You could also add Score.instance.UpdateScore() here!
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        Debug.Log("Bullet collision hit: " + collision.gameObject.name + " Tag: " + collision.gameObject.tag);
+
+        if (collision.gameObject.CompareTag("Obstacle"))
+        {
+            Destroy(gameObject);
         }
     }
 }

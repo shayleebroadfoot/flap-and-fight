@@ -1114,10 +1114,10 @@ MonoBehaviour:
   sfxSource: {fileID: 826212008}
   normalMusic: {fileID: 8300000, guid: 594be376f84474dfc9aed63365792064, type: 3}
   powerUpMusic: {fileID: 8300000, guid: 9087a11abd8164afba453c9edf7ffde6, type: 3}
-  shootSfx: {fileID: 8300000, guid: 0d945a75f60e547aaa087c1fd891110f, type: 3}
+  shootSfx: {fileID: 8300000, guid: c91046627e6404f669cdceada041a78f, type: 3}
   enemyHitSfx: {fileID: 8300000, guid: 313224878970a463a893d31dde6d32cd, type: 3}
   heartPickupSfx: {fileID: 8300000, guid: 3285cf9a3c8c243fbbee22aa8df4b8c7, type: 3}
-  dieSfx: {fileID: 8300000, guid: c91046627e6404f669cdceada041a78f, type: 3}
+  dieSfx: {fileID: 8300000, guid: 313224878970a463a893d31dde6d32cd, type: 3}
 --- !u!4 &708243063
 Transform:
   m_ObjectHideFlags: 0
