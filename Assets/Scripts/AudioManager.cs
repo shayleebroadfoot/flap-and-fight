@@ -16,6 +16,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioClip shootSfx;
     [SerializeField] private AudioClip enemyHitSfx;
     [SerializeField] private AudioClip heartPickupSfx;
+    [SerializeField] private AudioClip dieSfx;
 
     private void Awake()
     {
@@ -48,6 +49,19 @@ public class AudioManager : MonoBehaviour
     public void PlayHeartPickupSfx()
     {
         sfxSource.PlayOneShot(heartPickupSfx);
+    }
+
+    public void PlayDieSfx()
+    {
+        Debug.Log("PlayDieSfx called");
+        
+        if (dieSfx == null)
+        {
+            Debug.LogWarning("dieSfx is NOT assigned");
+            return;
+        }
+
+        sfxSource.PlayOneShot(dieSfx);
     }
 
     public void PlayNormalMusic()

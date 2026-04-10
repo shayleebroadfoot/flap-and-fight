@@ -79,6 +79,10 @@ public class FlyBehaviour : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Obstacle"))
         {
+            if (AudioManager.instance != null)
+            {
+                AudioManager.instance.PlayDieSfx();
+            }
             GameManager.instance.GameOver();
         }
     }
