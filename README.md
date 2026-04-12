@@ -15,7 +15,7 @@ This project is developed for **SENG 4660 Agile Game Development**.
 
 ## Documentation
 
-This project uses **GitHub Projects** to host the **[Kanban board](https://github.com/users/shayleebroadfoot/projects/3)**
+This project uses **GitHub Projects** to host the **[Kanban board](https://github.com/users/shayleebroadfoot/projects/3)**. Incremental progress of the Kanban board can be viewed in **Documentation/Sprint Planning.pdf** at the end of each sprint.
 
 All deliverable documents can be found in the **[Documentation](https://github.com/shayleebroadfoot/flap-and-fight/tree/main/Documentation)** folder in the `main` branch.
 
